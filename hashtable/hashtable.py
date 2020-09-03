@@ -71,15 +71,20 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
-        # Your code here
+        djb2_hash = 5381
+        for char in key:
+            djb2_hash = ((djb2_hash << 5) + djb2_hash) + ord(char)
+        djb2_hash = djb2_hash & 0xFFFFFFFF
+
+        return djb2_hash
 
     def hash_index(self, key):
         """
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        return self.fnv1(key) % self.capacity
-        #  return self.djb2(key) % self.capacity
+        #  return self.fnv1(key) % self.capacity
+        return self.djb2(key) % self.capacity
 
     def put(self, key, value):
         """
