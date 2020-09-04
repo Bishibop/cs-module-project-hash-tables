@@ -37,6 +37,8 @@ class HashTable:
 
         self.capacity = capacity
         self.storage = [None] * capacity
+        self.load = 0
+        self.freeze = False
 
     def get_num_slots(self):
         """
@@ -56,7 +58,7 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        return self.load / self.capacity
 
     def fnv1(self, key):
         """
@@ -126,6 +128,10 @@ class HashTable:
                 prevEntry.next = newEntry
             else:
                 self.storage[index] = newEntry
+            self.load += 1
+
+        if self.get_load_factor() >= 0.7:
+            self.resize(self.capacity * 2)
 
     def delete(self, key):
         """
@@ -147,6 +153,7 @@ class HashTable:
                     prevEntry.next = entry.next
                 else:
                     self.storage[index] = entry.next
+                self.load -= 1
                 break
             else:
                 prevEntry = entry
@@ -154,6 +161,9 @@ class HashTable:
 
         if not found:
             print(f"The key: {key} was not found in the hash.")
+
+        if self.get_load_factor() <= 0.2:
+            self.resize(self.capacity / 2)
 
     def get(self, key):
         """
@@ -184,7 +194,19 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        if not self.freeze:
+            old_storage = self.storage
+            self.storage = [None] * new_capacity
+
+            # Is there a way to do it without this #freeze variable
+            self.freeze = True
+
+            for entry in old_storage:
+                while entry:
+                    self.put(entry.key, entry.value)
+                    entry = entry.next
+
+            self.freeze = False
 
 
 if __name__ == "__main__":
