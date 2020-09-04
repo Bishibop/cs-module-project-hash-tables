@@ -7,6 +7,17 @@ class HashTableEntry:
         self.value = value
         self.next = None
 
+    def __repr__(self):
+        chain = [self]
+        node = self
+        while node.next:
+            chain.append(node.next)
+            node = node.next
+
+        chainStrings = [f"({node.key}: {node.value})" for node in chain]
+
+        return ' -> '.join(chainStrings)
+
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
@@ -83,8 +94,8 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #  return self.fnv1(key) % self.capacity
-        return self.djb2(key) % self.capacity
+        return self.fnv1(key) % self.capacity
+        #  return self.djb2(key) % self.capacity
 
     def put(self, key, value):
         """
@@ -135,7 +146,7 @@ class HashTable:
                 if prevEntry:
                     prevEntry.next = entry.next
                 else:
-                    self.storage[index] = None
+                    self.storage[index] = entry.next
                 break
             else:
                 prevEntry = entry
