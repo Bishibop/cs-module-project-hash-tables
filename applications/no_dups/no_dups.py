@@ -1,6 +1,14 @@
 def no_dups(s):
-    # Your code here
-
+    words = s.split()
+    memo = {}
+    unique_words = []
+    for word in words:
+        if word in memo:
+            pass
+        else:
+            unique_words.append(word)
+            memo[word] = 1
+    return ' '.join(unique_words)
 
 
 if __name__ == "__main__":

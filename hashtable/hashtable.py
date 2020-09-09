@@ -35,9 +35,9 @@ class HashTable:
         if capacity < MIN_CAPACITY:
             raise Exception(f"Hash must have capacity of {MIN_CAPACITY} min.")
 
-        self.capacity = capacity
+        self.capacity = int(capacity)
         self.storage = [None] * capacity
-        self.load = 0
+        self.num_elements = 0
         self.freeze = False
 
     def get_num_slots(self):
@@ -58,7 +58,7 @@ class HashTable:
 
         Implement this.
         """
-        return self.load / self.capacity
+        return self.num_elements / self.capacity
 
     def fnv1(self, key):
         """
@@ -128,7 +128,7 @@ class HashTable:
                 prevEntry.next = newEntry
             else:
                 self.storage[index] = newEntry
-            self.load += 1
+            self.num_elements += 1
 
         if self.get_load_factor() >= 0.7:
             self.resize(self.capacity * 2)
@@ -153,7 +153,7 @@ class HashTable:
                     prevEntry.next = entry.next
                 else:
                     self.storage[index] = entry.next
-                self.load -= 1
+                self.num_elements -= 1
                 break
             else:
                 prevEntry = entry
@@ -196,7 +196,7 @@ class HashTable:
         """
         if not self.freeze:
             old_storage = self.storage
-            self.storage = [None] * new_capacity
+            self.storage = [None] * int(new_capacity)
 
             # Is there a way to do it without this #freeze variable
             self.freeze = True
